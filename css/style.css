@@ -1,0 +1,129 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  background-color: #1a1a1a; 
+  color: #e0e0e0;
+}
+
+header {
+  background-color: #252525;
+  padding: 1.5rem 2rem;
+  border-bottom: 2px solid #333;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: #ffffff;
+}
+
+main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+a {
+  color: #cb6edf;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#new-note {
+  margin-bottom: 2rem;
+}
+
+#new-note div {
+  margin-bottom: 1rem;
+}
+
+#new-note label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+#new-note input[type="text"],
+#new-note textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #444;
+  border-radius: 6px;
+  background-color: #252525; 
+  color: #ffffff;
+  font-size: 1rem;
+}
+
+#new-note input[type="text"]:focus,
+#new-note textarea:focus {
+  outline: 2px solid #ec4899;
+  border-color: #ec4899;
+}
+
+#new-note button {
+  background-color: #ec4899;
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#new-note button:hover {
+  background-color: #e089b0;
+}
+
+#notes-list article {
+  background-color: #252525;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  border-radius: 8px;
+  max-height: 150px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.35);
+  border-left: 4px solid #ec4899;
+}
+
+#notes-list article h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+#notes-list article p {
+  margin-bottom: 0.75rem;
+  color: #ccc;
+}
+
+aside#note-details {
+  background-color: #2d2d2d;
+  padding: 20px;
+  margin: 2rem auto;
+  max-width: 800px;
+  border-radius: 8px;
+  border: 1px solid #444;
+}
+
+aside#note-details h2 {
+  margin-top: 0;
+  color: #ec4899;
+}
+
+footer {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  background-color: #111111;
+  color: #888888;
+  font-size: 0.875rem;
+  border-top: 1px solid #222;
+}
