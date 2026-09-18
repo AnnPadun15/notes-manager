@@ -8,53 +8,56 @@
 </head>
 <body>
 
-    <header>
+    <header class="site-header">
         <h1>Менеджер нотаток</h1>
     </header>
 
-    <main>
-        <section id="new-note">
-            <h2>Нова нотатка</h2>
-            <form action="#">
-                <div>
-                    <label for="note-title">Заголовок нотатки:</label>
-                    <input type="text" id="note-title" name="note-title" required>
+    <div class="app-container">
+        <main>
+             <section id="new-note">
+                <h2>Нова нотатка</h2>
+                <form action="#">
+                    <div>
+                        <label for="note-title">Заголовок нотатки:</label>
+                        <input type="text" id="note-title" name="note-title" required>
+                    </div>
+                    <div>
+                        <label for="note-content">Текст нотатки:</label>
+                        <textarea id="note-content" name="note-content" rows="4" required></textarea>
+                    </div>
+                    <button type="submit">Зберегти нотатку</button>
+                </form>
+            </section>
+
+            <section id="notes-list">
+                <h2>Мої нотатки</h2>
+                <div class="cards">
+                    <article>
+                         <h3>План завдань на тиждень</h3>
+                         <p>1. Завершити практикум з HTML. 2. Підготуватися до тестування...</p>
+                         <a href="#note-1">Читати повністю</a>
+                     </article>
+
+                     <article>
+                         <h3>Список покупок</h3>
+                         <p>Молоко, хліб, яблука, кава, сир...</p>
+                         <a href="#note-2">Читати повністю</a>
+                     </article>
                 </div>
-                <div>
-                    <label for="note-content">Текст нотатки:</label>
-                    <textarea id="note-content" name="note-content" rows="4" required></textarea>
-                </div>
-                <button type="submit">Зберегти нотатку</button>
-            </form>
-        </section>
+             </section>
+         </main>
 
-        <section id="notes-list">
-            <h2>Мої нотатки</h2>
-            
-            <article>
-                <h3>План завдань на тиждень</h3>
-                <p>1. Завершити практикум з HTML. 2. Підготуватися до тестування...</p>
-                <a href="#note-1">Читати повністю</a>
-            </article>
-
-            <article>
-                <h3>Список покупок</h3>
-                <p>Молоко, хліб, яблука, кава, сир...</p>
-                <a href="#note-2">Читати повністю</a>
-            </article>
-        </section>
-    </main>
-
-    <aside id="note-details">
-        <h2>Перегляд нотатки</h2>
-        <article id="note-1">
-            <h3>План завдань на тиждень</h3>
-            <p><strong>Створено:</strong> <time datetime="2026-09-08">8 вересня 2026</time></p>
-            <p>1. Завершити практикум з HTML.</p>
-            <p>2. Підготуватися до тестування з семантики.</p>
-            <p>3. Оформити та закоммітити проєкт у Git.</p>
-        </article>
-    </aside>
+         <aside id="note-details">
+             <h2>Перегляд нотатки</h2>
+             <article id="note-1">
+                 <h3>План завдань на тиждень</h3>
+                 <p><strong>Створено:</strong> <time datetime="2026-09-08">8 вересня 2026</time></p>
+                 <p>1. Завершити практикум з HTML.</p>
+                 <p>2. Підготуватися до тестування з семантики.</p>
+                 <p>3. Оформити та закоммітити проєкт у Git.</p>
+             </article>
+         </aside>
+    </div>
 
     <footer>
         <p>&copy; 2026 Менеджер нотаток. Автор: <strong>Анна Падун</strong>. Розроблено для практичної роботи.</p>
