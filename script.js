@@ -13,6 +13,12 @@ const notes = [
   { id: 5, title: 'Зробити практикум 7', category: 'Навчання' }
 ];
 
+// Отримання елементів форми
+const noteForm = document.querySelector('#note-form');
+const noteTitleInput = document.querySelector('#note-title');
+const noteContentInput = document.querySelector('#note-content');
+const charCounter = document.querySelector('#char-counter');
+
 // Вибір контейнера та елемента підсумку
 const notesContainer = document.querySelector('#notes-list');
 const notesCountElement = document.querySelector('#notes-count');
@@ -85,3 +91,70 @@ function renderNotes(notesArray) {
 }
 
 renderNotes(notes);
+
+// Обробка відправки форми
+noteForm.addEventListener('submit', function(event) {
+    // Скасовуємо стандартну поведінку відправки форми (перезавантаження)
+    event.preventDefault();
+
+    // Зчитуємо значення полів
+    const title = noteTitleInput.value.trim();
+    const content = noteContentInput.value.trim();
+
+    if (!title || !content) return;
+
+    // Створення нового об'єкта та додавання в масив
+    const newNote = {
+        id: Date.now().toString(), // Унікальний id
+        title: title,
+        category: 'Особисте', // Категорія за замовчуванням
+        excerpt: content
+    };
+    notes.push(newNote);
+
+    renderNotes(notes);
+
+    noteForm.reset();
+    charCounter.textContent = '0 / 300';
+    charCounter.classList.remove('near-limit');
+});
+
+// Додаткова валідація — живий лічильник символів
+noteContentInput.addEventListener('input', function() {
+    const currentLength = noteContentInput.value.length;
+    const maxLength = 300;
+
+    // Оновлюємо текст лічильника
+    charCounter.textContent = `${currentLength} / ${maxLength}`;
+
+    // Змінюємо колір/стиль, якщо наближаємося до ліміту (понад 250 символів)
+    charCounter.classList.toggle('near-limit', currentLength >= 250);
+});
+
+// Перегляд нотатки при кліку (делегування подій)
+const noteDetails = document.querySelector('#note-details');
+
+notesContainer.addEventListener('click', function(event) {
+    // Шукаємо найближчий елемент <article> із data-id
+    const card = event.target.closest('article[data-id]');
+    
+    if (!card) return;
+
+    // Зчитуємо id нотатки
+    const noteId = card.dataset.id;
+    
+    // Знаходимо відповідну нотатку в масиві
+    const foundNote = notes.find(n => String(n.id) === String(noteId));
+
+    if (foundNote) {
+        // Виводимо повну інформацію у блок aside
+        noteDetails.innerHTML = `
+            <h2>Перегляд нотатки</h2>
+            <article>
+                <h3>${foundNote.title}</h3>
+                <p><strong>Категорія:</strong> ${foundNote.category}</p>
+                <p>${foundNote.excerpt}</p>
+            </article>
+        `;
+    }
+});

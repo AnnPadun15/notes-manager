@@ -17,14 +17,15 @@
         <main>
              <section id="new-note">
                 <h2>Нова нотатка</h2>
-                <form action="#">
+                <form id="note-form" action="#">
                     <div>
                         <label for="note-title">Заголовок нотатки:</label>
                         <input type="text" id="note-title" name="note-title" required>
                     </div>
                     <div>
                         <label for="note-content">Текст нотатки:</label>
-                        <textarea id="note-content" name="note-content" rows="4" required></textarea>
+                        <textarea id="note-content" name="note-content" rows="4" required maxlength="300"></textarea>
+                        <small id="char-counter">0 / 300</small>
                     </div>
                     <button type="submit">Зберегти нотатку</button>
                 </form>

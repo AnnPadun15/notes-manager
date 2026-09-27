@@ -228,3 +228,8 @@ footer {
     margin-top: 0;
   }
 }
+
+#char-counter.near-limit {
+    color: #e15252; 
+    font-weight: bold;
+}
