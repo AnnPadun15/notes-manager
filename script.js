@@ -4,18 +4,35 @@ console.log('script.js підключено');
 const staticCards = document.querySelectorAll('#notes-list article');
 staticCards.forEach(card => card.remove());
 
-// Оновлені дані з id та категоріями для Кроку 6
+const categoryNamesMap = {
+  'cat-personal': 'Особисте',
+  'cat-important': 'Важливе',
+  'cat-password': 'Пароль / Доступ'
+};
+
+// Оновлені дані з id та категоріями (відповідно до CSS-класів cat-personal, cat-important, cat-password)
 const notes = [
-  { id: 1, title: 'Купити продукти', category: 'Особисте' },
-  { id: 2, title: 'Підготувати звіт', category: 'Робота' },
-  { id: 3, title: 'Записатися до лікаря', category: 'Особисте' },
-  { id: 4, title: 'Вивчити JavaScript', category: 'Навчання' },
-  { id: 5, title: 'Зробити практикум 7', category: 'Навчання' }
-];
+  { 
+    id: '1', 
+    title: 'План завдань на тиждень', 
+    category: 'cat-important', 
+    categoryName: 'Важливе', 
+    excerpt: '1. Завершити практикум з HTML. 2. Підготуватися до тестування...' 
+  },
+  { 
+    id: '2', 
+    title: 'Список покупок', 
+    category: 'cat-personal', 
+    categoryName: 'Особисте', 
+    excerpt: 'Молоко, хліб, яблука, кава, сир...' 
+  }
+  ];
 
 // Отримання елементів форми
 const noteForm = document.querySelector('#note-form');
 const noteTitleInput = document.querySelector('#note-title');
+const noteCategoryInput = document.querySelector('#note-category');
+const notePasswordInput = document.querySelector('#note-password');
 const noteContentInput = document.querySelector('#note-content');
 const charCounter = document.querySelector('#char-counter');
 
@@ -28,7 +45,7 @@ function countNotesByCategory(notesArray) {
   const categoryCounts = {};
 
   for (let i = 0; i < notesArray.length; i++) {
-    const category = notesArray[i].category;
+    const category = notesArray[i].category || notesArray[i].category;
     
     if (categoryCounts[category]) {
       categoryCounts[category] += 1;
@@ -53,17 +70,9 @@ function checkPasswordLength(password) {
   }
 }
 
-// Тестуємо умовну конструкцію з коротким та довгим паролем
-checkPasswordLength('12345');     // виведе попередження
-checkPasswordLength('qwerty1234'); // виведе, що пароль ОК
-
 // Стрілкова функція перевірки надійності пароля
 // Повертає true, якщо довжина пароля >= 8, і false, якщо менше
 const isStrongPassword = password => password.length >= 8;
-
-// Перевірка стрілкової функції через console.log
-const userPassword = 'mySecretPassword123';
-console.log(`Чи є пароль "${userPassword}" надійним?`, isStrongPassword(userPassword));
 
 // Функція динамічного рендеру нотаток на сторінку
 function renderNotes(notesArray) {
@@ -74,15 +83,23 @@ function renderNotes(notesArray) {
     const card = document.createElement('article');
 
     card.dataset.id = note.id;
-    card.classList.add('note-card', `category-${note.category.toLowerCase()}`);
+    card.classList.add('note-card', note.category);
+
+    const badge = document.createElement('span');
+    badge.classList.add('category-badge');
+    badge.textContent = note.categoryName || 'Нотатка';
 
     const title = document.createElement('h3');
     title.textContent = note.title;
 
-    const category = document.createElement('p');
-    category.textContent = `Категорія: ${note.category}`;
+    const excerpt = document.createElement('p');
+    excerpt.textContent = note.excerpt;
 
-    card.append(title, category);
+    const link = document.createElement('a');
+    link.href = `#note-${note.id}`;
+    link.textContent = 'Читати повністю';
+
+    card.append(badge, title, excerpt, link);
 
     notesContainer.append(card);
   });
@@ -99,19 +116,29 @@ noteForm.addEventListener('submit', function(event) {
 
     // Зчитуємо значення полів
     const title = noteTitleInput.value.trim();
+    const categoryClass = noteCategoryInput ? noteCategoryInput.value : 'cat-personal';
+    const categoryName = noteCategoryInput ? noteCategoryInput.options[noteCategoryInput.selectedIndex].text : 'Особисте';
+    const password = notePasswordInput ? notePasswordInput.value.trim() : '';
     const content = noteContentInput.value.trim();
 
     if (!title || !content) return;
+
+    // Перевіряємо довжину пароля та блокуємо збереження, якщо пароль занадто короткий
+    if (password && password.length < 8) {
+    alert('Помилка: Пароль занадто короткий! Має бути не менше 8 символів.');
+    return;
+    }
 
     // Створення нового об'єкта та додавання в масив
     const newNote = {
         id: Date.now().toString(), // Унікальний id
         title: title,
-        category: 'Особисте', // Категорія за замовчуванням
-        excerpt: content
+        category: categoryClass,
+        categoryName: categoryName,
+        excerpt: password ? `${content} (Пароль: ${password})` : content
     };
-    notes.push(newNote);
 
+    notes.push(newNote);
     renderNotes(notes);
 
     noteForm.reset();
@@ -152,7 +179,7 @@ notesContainer.addEventListener('click', function(event) {
             <h2>Перегляд нотатки</h2>
             <article>
                 <h3>${foundNote.title}</h3>
-                <p><strong>Категорія:</strong> ${foundNote.category}</p>
+                <p><strong>Категорія:</strong> ${foundNote.categoryName || categoryNamesMap[foundNote.category] || foundNote.category}</p>
                 <p>${foundNote.excerpt}</p>
             </article>
         `;

@@ -30,7 +30,7 @@
   /* Кольори категорій */
   --cat-passwords: #10b981;
   --cat-personal: #3b82f6;
-  --cat-important: #f59e0b;
+  --cat-important: #43ed90;
 
   /* Типографіка */
   --font-main: 'Inter', system-ui, -apple-system, sans-serif;
@@ -112,6 +112,8 @@ a:hover {
 }
 
 #new-note input[type="text"],
+#new-note input[type="password"],
+#new-note select,
 #new-note textarea {
   width: 100%;
   padding: 12px;
@@ -127,12 +129,13 @@ a:hover {
 #new-note input[type="password"],
 .password-field,
 .mono-text {
-  font-family: var(--font-mono);
+  font-family: var(--font-mono) !important;
   letter-spacing: 0.05em;
 }
 
 #new-note input[type="text"]:focus,
 #new-note input[type="password"]:focus,
+#new-note select:focus,
 #new-note textarea:focus {
   outline: 2px solid var(--accent-shield);
   border-color: var(--accent-shield);
@@ -172,6 +175,35 @@ button:hover {
   border-left-color: var(--cat-important);
 }
 
+.cards article.cat-password {
+  border-left-color: var(--cat-passwords);
+}
+
+.category-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.cat-important .category-badge {
+  background-color: rgba(45, 249, 123, 0.2);
+  color: var(--cat-important);
+}
+
+.cat-personal .category-badge {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: var(--cat-personal);
+}
+
+.cat-password .category-badge {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: var(--cat-passwords);
+}
+
 #notes-list article h3 {
   margin-top: 0;
   margin-bottom: 0.5rem;
@@ -206,6 +238,19 @@ footer {
   border-top: 1px solid var(--border-color);
 }
 
+#char-counter {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  display: block;
+  text-align: right;
+  margin-top: 0.25rem;
+}
+
+#char-counter.near-limit {
+  color: #f87171; 
+  font-weight: bold;
+}
+
 @media (min-width: 600px) {
   .cards {
     grid-template-columns: repeat(2, 1fr);
@@ -227,9 +272,4 @@ footer {
   aside#note-details {
     margin-top: 0;
   }
-}
-
-#char-counter.near-limit {
-    color: #e15252; 
-    font-weight: bold;
 }

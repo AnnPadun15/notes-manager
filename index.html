@@ -23,6 +23,18 @@
                         <input type="text" id="note-title" name="note-title" required>
                     </div>
                     <div>
+                        <label for="note-category">Категорія:</label>
+                        <select id="note-category" name="note-category" required>
+                            <option value="cat-personal">Особисте</option>
+                            <option value="cat-important">Важливе</option>
+                            <option value="cat-password">Пароль / Доступ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="note-password">Пароль (якщо потрібен):</label>
+                        <input type="password" id="note-password" name="note-password" placeholder="Введіть пароль" autocomplete="off">
+                    </div>
+                    <div>
                         <label for="note-content">Текст нотатки:</label>
                         <textarea id="note-content" name="note-content" rows="4" required maxlength="300"></textarea>
                         <small id="char-counter">0 / 300</small>
@@ -42,7 +54,9 @@
                          <a href="#note-1">Читати повністю</a>
                      </article>
 
-                     <article>
+
+                     <article class="note-card cat-personal">
+                         <span class="category-badge">Особисте</span>
                          <h3>Список покупок</h3>
                          <p>Молоко, хліб, яблука, кава, сир...</p>
                          <a href="#note-2">Читати повністю</a>
