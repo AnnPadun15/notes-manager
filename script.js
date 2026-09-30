@@ -185,3 +185,67 @@ notesContainer.addEventListener('click', function(event) {
         `;
     }
 });
+
+// Посилання на API з мого варіанта 13
+const API_URL = 'https://jsonplaceholder.typicode.com/posts?userId=1';
+
+// Отримання елементів статусу та помилки
+const loadingStatus = document.querySelector('#loading-status');
+const errorMessage = document.querySelector('#error-message');
+
+// Асинхронна функція для завантаження нотаток
+async function loadNotes() {
+  // Перед запитом показуємо текст завантаження і ховаємо старі помилки
+  if (loadingStatus) loadingStatus.style.display = 'block';
+  if (errorMessage) errorMessage.style.display = 'none';
+
+  try {
+    // Виконуємо fetch і чекаємо на відповідь
+    const response = await fetch(API_URL);
+
+    // Перевірка HTTP-статусу (200-299)
+    if (!response.ok) {
+      throw new Error(`Сервер відповів кодом ${response.status}`);
+    }
+
+    // Розбір тіла відповіді як JSON
+    const data = await response.json();
+
+    // Трансформуємо дані з API під нашу структуру
+    const fetchedNotes = data.map(item => ({
+      id: item.id.toString(),
+      title: item.title,
+      category: 'cat-personal', // за замовчуванням
+      categoryName: 'Особисте',
+      excerpt: item.body
+    }));
+
+    // Оновлюємо наш глобальний масив та перерендерюємо список
+    notes.length = 0; // очищаємо початкові дані
+    notes.push(...fetchedNotes);
+    renderNotes(notes);
+
+  } catch (error) {
+    // Деталі в консоль, а користувачу — зрозуміле повідомлення
+    console.error('Помилка завантаження:', error);
+    if (errorMessage) {
+      errorMessage.textContent = 'Нотатки недоступні офлайн';
+      errorMessage.style.display = 'block';
+    }
+  } finally {
+    // Ховаємо завантаження в будь-якому випадку (успіх чи помилка)
+    if (loadingStatus) loadingStatus.style.display = 'none';
+  }
+}
+
+// Викликаємо функцію для перевірки
+loadNotes();
+
+// Кнопка для мануального виклику loadNotes()
+const refreshBtn = document.querySelector('#refresh-btn');
+
+if (refreshBtn) {
+  refreshBtn.addEventListener('click', () => {
+    loadNotes();
+  });
+}
