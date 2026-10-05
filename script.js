@@ -1,8 +1,23 @@
+/* 
+ Міграція інтерактивного інтерфейсу на фреймворк Vue 3.
+Обгрунтування вибору:
+Для реалізації обрано фреймворк Vue 3. Основні причини вибору:
+1. Легке підключення через CDN без необхідності складного збирання (Babel/Webpack).
+2. Декларативний та зрозумілий синтаксис шаблонів.
+3. Вбудована реактивність — заміна застарілих ручних маніпуляцій з DOM (querySelector, innerHTML) на автоматичне перемалювання інтерфейсу при зміні стану (data).
+*/
+
 console.log('script.js підключено');
 
+/* 
+ПРИБРАНО РУЧНИЙ DOM-КОД ТА НАЛАШТОВАНО АВТОМАТИЧНЕ ОНОВЛЕННЯ
+Усі маніпуляції з DOM (querySelector, innerHTML, append) замінено на реактивний
+стан Vue 3. При зміні data() список перемальовується фреймворком автоматично.
+*/
+
 // Очищення статичних картка з HTML (з практикуму 2)
-const staticCards = document.querySelectorAll('#notes-list article');
-staticCards.forEach(card => card.remove());
+//const staticCards = document.querySelectorAll('#notes-list article');
+//staticCards.forEach(card => card.remove());
 
 const categoryNamesMap = {
   'cat-personal': 'Особисте',
@@ -10,6 +25,8 @@ const categoryNamesMap = {
   'cat-password': 'Пароль / Доступ'
 };
 
+/* 
+Закоментовано (дані перенесено в реактивний стан Vue data()):
 // Оновлені дані з id та категоріями (відповідно до CSS-класів cat-personal, cat-important, cat-password)
 const notes = [
   { 
@@ -27,6 +44,7 @@ const notes = [
     excerpt: 'Молоко, хліб, яблука, кава, сир...' 
   }
   ];
+*/
 
 // Отримання елементів форми
 const noteForm = document.querySelector('#note-form');
@@ -58,7 +76,7 @@ function countNotesByCategory(notesArray) {
 }
 
 // Виклик функції
-countNotesByCategory(notes);
+// countNotesByCategory(notes);
 
 // Функція перевірки пароля через умовну конструкцію if/else
 // Приймає пароль і виводить у консоль попередження або повідомлення про успіх
@@ -74,6 +92,7 @@ function checkPasswordLength(password) {
 // Повертає true, якщо довжина пароля >= 8, і false, якщо менше
 const isStrongPassword = password => password.length >= 8;
 
+/* Закоментовано ручний рендер DOM, оскільки рендеринг перенесено на Vue
 // Функція динамічного рендеру нотаток на сторінку
 function renderNotes(notesArray) {
   // Очищаємо вміст контейнера перед виводом нових елементів
@@ -108,12 +127,13 @@ function renderNotes(notesArray) {
 }
 
 renderNotes(notes);
+*/
 
+/* Закоментовано старий обробник форми
 // Обробка відправки форми
 noteForm.addEventListener('submit', function(event) {
     // Скасовуємо стандартну поведінку відправки форми (перезавантаження)
     event.preventDefault();
-
     // Зчитуємо значення полів
     const title = noteTitleInput.value.trim();
     const categoryClass = noteCategoryInput ? noteCategoryInput.value : 'cat-personal';
@@ -145,22 +165,26 @@ noteForm.addEventListener('submit', function(event) {
     charCounter.textContent = '0 / 300';
     charCounter.classList.remove('near-limit');
 });
+*/
 
 // Додаткова валідація — живий лічильник символів
-noteContentInput.addEventListener('input', function() {
-    const currentLength = noteContentInput.value.length;
-    const maxLength = 300;
+if (noteContentInput && charCounter) {
+   noteContentInput.addEventListener('input', function() {
+     const currentLength = noteContentInput.value.length;
+     const maxLength = 300;
 
-    // Оновлюємо текст лічильника
-    charCounter.textContent = `${currentLength} / ${maxLength}`;
+     // Оновлюємо текст лічильника
+     charCounter.textContent = `${currentLength} / ${maxLength}`;
 
-    // Змінюємо колір/стиль, якщо наближаємося до ліміту (понад 250 символів)
-    charCounter.classList.toggle('near-limit', currentLength >= 250);
-});
+     // Змінюємо колір/стиль, якщо наближаємося до ліміту (понад 250 символів)
+     charCounter.classList.toggle('near-limit', currentLength >= 250);
+   });
+}
 
 // Перегляд нотатки при кліку (делегування подій)
 const noteDetails = document.querySelector('#note-details');
 
+/* Закоментовано старий обробник для детального перегляду
 notesContainer.addEventListener('click', function(event) {
     // Шукаємо найближчий елемент <article> із data-id
     const card = event.target.closest('article[data-id]');
@@ -185,6 +209,7 @@ notesContainer.addEventListener('click', function(event) {
         `;
     }
 });
+*/
 
 // Посилання на API з мого варіанта 13
 const API_URL = 'https://jsonplaceholder.typicode.com/posts?userId=1';
@@ -220,10 +245,8 @@ async function loadNotes() {
       excerpt: item.body
     }));
 
-    // Оновлюємо наш глобальний масив та перерендерюємо список
-    notes.length = 0; // очищаємо початкові дані
-    notes.push(...fetchedNotes);
-    renderNotes(notes);
+    // Реактивно оновлюємо стан Vue-додатка без виклику ручного renderNotes()
+    vueApp.notes = fetchedNotes;
 
   } catch (error) {
     // Деталі в консоль, а користувачу — зрозуміле повідомлення
@@ -239,7 +262,7 @@ async function loadNotes() {
 }
 
 // Викликаємо функцію для перевірки
-loadNotes();
+// loadNotes();
 
 // Кнопка для мануального виклику loadNotes()
 const refreshBtn = document.querySelector('#refresh-btn');
@@ -249,3 +272,60 @@ if (refreshBtn) {
     loadNotes();
   });
 }
+
+// Створення окремого компонента NoteCard , Дочірній компонент NoteCard надсилає подію $emit батькові
+const NoteCard = {
+  props: ['title', 'excerpt', 'isExpanded'],
+  emits: ['toggle-expand'],
+  methods: {
+    handleCardClick() {
+      // Викликаємо $emit для передачі події у батьківський компонент
+      this.$emit('toggle-expand');
+    }
+  },
+  template: `
+    <article class="note-card cat-personal" @click="handleCardClick" style="cursor: pointer;">
+      <span class="category-badge">Нотатка</span>
+      <h3>{{ title }}</h3>
+      <p v-if="!isExpanded">{{ excerpt.substring(0, 35) }}...</p>
+      <p v-else>{{ excerpt }}</p>
+    </article>
+  `
+};
+// Створення та конфігурація додатка Vue , Батьківський додаток керує станом розгорнутої картки
+const app = Vue.createApp({
+  components: {
+    'note-card': NoteCard
+  },
+  data() {
+    return {
+      // ID розгорнутої нотатки у батьківському стані
+      expandedNoteId: null,
+      notes: [
+        { 
+          id: '1', 
+          title: 'План завдань на тиждень', 
+          category: 'cat-important',
+          categoryName: 'Важливе',
+          excerpt: '1. Завершити практикум з HTML. 2. Підготуватися до тестування з семантики. 3. Оформити та закоммітити проєкт у Git.' 
+        },
+        { 
+          id: '2', 
+          title: 'Список покупок', 
+          category: 'cat-personal',
+          categoryName: 'Особисте',
+          excerpt: 'Молоко, хліб, яблука, кава, сир, масло, овочі на тиждень.' 
+        }
+      ]
+    };
+  },
+  methods: {
+    // Батьківський метод оновлює стан expandedNoteId новим значенням
+    toggleNote(id) {
+      this.expandedNoteId = this.expandedNoteId === id ? null : id;
+    }
+  }
+});
+
+// Зберігаємо екземпляр додатка для асинхронного завантаження
+const vueApp = app.mount('#app');

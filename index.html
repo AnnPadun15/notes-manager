@@ -6,6 +6,8 @@
     <title>Менеджер нотаток</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="script.js" defer></script>
+    <!-- Vue 3, глобальна збірка -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 </head>
 <body>
 
@@ -43,29 +45,24 @@
                 </form>
             </section>
 
-            <section>
+            <section id="app">
                 <h2>Мої нотатки</h2>
                 <!-- Елемент для стану завантаження-->
                 <p id="loading-status" style="display: none; color: #10b981; font-weight: bold;">Завантаження нотаток...</p>
                 <button id="refresh-btn" class="btn-primary" style="margin-bottom: 1rem;">Оновити нотатки</button>
                 <!-- Елемент для виводу помилки (Крок 8) -->
                 <div id="error-message" style="display: none; color: #f87171; font-weight: bold; padding: 10px; border: 1px solid #f87171; border-radius: 6px; margin-bottom: 1rem;"></div>
-                <p id="notes-count">Усього нотаток: 0</p>
+                <p id="notes-count">Усього нотаток: {{ notes.length }}</p>
 
                 <div id="notes-list" class="cards">
-                    <article>
-                         <h3>План завдань на тиждень</h3>
-                         <p>1. Завершити практикум з HTML. 2. Підготуватися до тестування...</p>
-                         <a href="#note-1">Читати повністю</a>
-                     </article>
-
-
-                     <article class="note-card cat-personal">
-                         <span class="category-badge">Особисте</span>
-                         <h3>Список покупок</h3>
-                         <p>Молоко, хліб, яблука, кава, сир...</p>
-                         <a href="#note-2">Читати повністю</a>
-                     </article>
+                    <note-card 
+                         v-for="note in notes" 
+                         :key="note.id" 
+                         :title="note.title" 
+                         :excerpt="note.excerpt"
+                         :is-expanded="expandedNoteId === note.id"
+                         @toggle-expand="toggleNote(note.id)">
+                     </note-card>
                 </div>
              </section>
          </main>
@@ -86,6 +83,5 @@
         <p>&copy; 2026 Менеджер нотаток. Автор: <strong>Анна Падун</strong>. Розроблено для практичної роботи.</p>
     </footer>
 
-    <script src="js/app.js"></script>
 </body>
 </html>
