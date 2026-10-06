@@ -46,12 +46,19 @@
             </section>
 
             <section id="app">
-                <h2>Мої нотатки</h2>
-                <!-- Елемент для стану завантаження-->
-                <p id="loading-status" style="display: none; color: #10b981; font-weight: bold;">Завантаження нотаток...</p>
-                <button id="refresh-btn" class="btn-primary" style="margin-bottom: 1rem;">Оновити нотатки</button>
-                <!-- Елемент для виводу помилки (Крок 8) -->
-                <div id="error-message" style="display: none; color: #f87171; font-weight: bold; padding: 10px; border: 1px solid #f87171; border-radius: 6px; margin-bottom: 1rem;"></div>
+                 <h2>Мої нотатки</h2>
+                 <!-- Індикатор завантаження через стан Vue -->
+                 <p v-if="isLoading" style="color: #10b981; font-weight: bold;">Завантаження нотаток...</p>
+    
+                 <!-- Кнопка оновлення з директивою @click -->
+                 <button id="refresh-btn" class="btn-primary" @click="loadNotes" style="margin-bottom: 1rem;">
+                     Оновити нотатки
+                 </button>
+    
+                 <!-- Блок помилки через стан Vue -->
+                 <div v-if="errorMessage" style="color: #f87171; font-weight: bold; padding: 10px; border: 1px solid #f87171; border-radius: 6px; margin-bottom: 1rem;">
+                     {{ errorMessage }}
+                 </div>
                 <p id="notes-count">Усього нотаток: {{ notes.length }}</p>
 
                 <div id="notes-list" class="cards">
@@ -59,9 +66,7 @@
                          v-for="note in notes" 
                          :key="note.id" 
                          :title="note.title" 
-                         :excerpt="note.excerpt"
-                         :is-expanded="expandedNoteId === note.id"
-                         @toggle-expand="toggleNote(note.id)">
+                         :excerpt="note.excerpt">
                      </note-card>
                 </div>
              </section>

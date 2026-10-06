@@ -275,12 +275,17 @@ if (refreshBtn) {
 
 // Створення окремого компонента NoteCard , Дочірній компонент NoteCard надсилає подію $emit батькові
 const NoteCard = {
-  props: ['title', 'excerpt', 'isExpanded'],
-  emits: ['toggle-expand'],
+  props: ['title', 'excerpt'],
+  data() {
+    return {
+      // Локальний прапорець стану для кожної окремої картки
+      isExpanded: false
+    };
+  },
   methods: {
     handleCardClick() {
-      // Викликаємо $emit для передачі події у батьківський компонент
-      this.$emit('toggle-expand');
+      // Перемикаємо стан розгортання при кліку
+      this.isExpanded = !this.isExpanded;
     }
   },
   template: `
@@ -299,8 +304,6 @@ const app = Vue.createApp({
   },
   data() {
     return {
-      // ID розгорнутої нотатки у батьківському стані
-      expandedNoteId: null,
       notes: [
         { 
           id: '1', 
@@ -320,9 +323,25 @@ const app = Vue.createApp({
     };
   },
   methods: {
-    // Батьківський метод оновлює стан expandedNoteId новим значенням
-    toggleNote(id) {
-      this.expandedNoteId = this.expandedNoteId === id ? null : id;
+    // Метод для асинхронного завантаження з API
+    async loadNotes() {
+      try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/posts?userId=1');
+        if (!response.ok) throw new Error(`Сервер відповів кодом ${response.status}`);
+        
+        const data = await response.json();
+        
+        // Оновлюємо реактивний стан додатка
+        this.notes = data.map(item => ({
+          id: item.id.toString(),
+          title: item.title,
+          category: 'cat-personal',
+          categoryName: 'Особисте',
+          excerpt: item.body
+        }));
+      } catch (error) {
+        console.error('Помилка завантаження:', error);
+      }
     }
   }
 });
