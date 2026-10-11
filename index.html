@@ -59,28 +59,25 @@
                  <div v-if="errorMessage" style="color: #f87171; font-weight: bold; padding: 10px; border: 1px solid #f87171; border-radius: 6px; margin-bottom: 1rem;">
                      {{ errorMessage }}
                  </div>
-                <p id="notes-count">Усього нотаток: {{ notes.length }}</p>
+                 <p id="notes-count">Усього нотаток: {{ notes.length }}</p>
 
-                <div id="notes-list" class="cards">
+                 <div id="notes-list" class="cards">
                     <note-card 
                          v-for="note in notes" 
                          :key="note.id" 
+                         :id="note.id"
                          :title="note.title" 
-                         :excerpt="note.excerpt">
+                         :excerpt="note.excerpt"
+                         @select="selectNote(note)"
+                         @edit="editNote"
+                         @remove="deleteNote">
                      </note-card>
                 </div>
              </section>
          </main>
-
          <aside id="note-details">
              <h2>Перегляд нотатки</h2>
-             <article id="note-1">
-                 <h3>План завдань на тиждень</h3>
-                 <p><strong>Створено:</strong> <time datetime="2026-09-08">8 вересня 2026</time></p>
-                 <p>1. Завершити практикум з HTML.</p>
-                 <p>2. Підготуватися до тестування з семантики.</p>
-                 <p>3. Оформити та закоммітити проєкт у Git.</p>
-             </article>
+             <p>Оберіть нотатку зі списку для перегляду</p>
          </aside>
     </div>
 
