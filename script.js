@@ -318,7 +318,7 @@ if (refreshBtn) {
 
 // Створення окремого компонента NoteCard , Дочірній компонент NoteCard надсилає подію $emit батькові
 const NoteCard = {
-  props: ['id', 'title', 'excerpt'],
+  props: ['id', 'title', 'excerpt' , 'category', 'categoryName'],
   data() {
     return {
       // Локальний прапорець стану для кожної окремої картки
@@ -340,17 +340,24 @@ const NoteCard = {
     // Новий метод для передачі події редагування
     editCard(event) {
       event.stopPropagation();
-      this.$emit('edit', { id: this.id, title: this.title, excerpt: this.excerpt });
+      this.$emit('edit', { 
+        id: this.id, 
+        title: this.title, 
+        excerpt: this.excerpt,
+        category: this.category,
+        categoryName: this.categoryName
+      });
     }
   },
   template: `
     <article 
-      class="note-card cat-personal" 
+      :class="['note-card', category || 'cat-personal']" 
       @click="handleCardClick" 
       style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; min-height: 220px; padding: 14px;">
       
       <div style="overflow: hidden;">
-        <span class="category-badge">НОТАТКА</span>
+        <!-- Динамічний бейдж категорії -->
+        <span class="category-badge">{{ categoryName || 'НОТАТКА' }}</span>
         
         <h3 style="margin: 8px 0 6px 0; font-size: 1rem; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;" :title="title">
           {{ title }}
@@ -364,16 +371,13 @@ const NoteCard = {
         </p>
       </div>
 
-      <!-- Кнопки в рідному дизайні інтерфейсу -->
       <div style="margin-top: 10px; display: flex; gap: 8px; align-items: center;">
-        <!-- Смарагдова кнопка в тон головних кнопок сайту -->
         <button 
           @click="editCard" 
           style="background-color: #10b981 !important; color: #064e3b !important; border: none !important; padding: 5px 10px !important; border-radius: 6px !important; cursor: pointer !important; font-weight: 700 !important; font-size: 0.78rem !important;">
           Редагувати
         </button>
 
-        <!-- Акуратна темна кнопка для видалення, яка не порушує гармонію -->
         <button 
           @click="deleteCard" 
           style="background-color: rgba(239, 68, 68, 0.15) !important; color: #f87171 !important; border: 1px solid rgba(239, 68, 68, 0.3) !important; padding: 5px 10px !important; border-radius: 6px !important; cursor: pointer !important; font-weight: 600 !important; font-size: 0.78rem !important;">
@@ -401,6 +405,7 @@ const app = Vue.createApp({
     async refreshNotesFromDB() {
       try {
         this.notes = await getAllNotesFromDB();
+        saveToLocalStorage(this.notes);
       } catch (err) {
         console.error('Помилка отримання з IndexedDB:', err);
         // Виводимо зрозуміле повідомлення користувачеві на екрані
@@ -411,8 +416,8 @@ const app = Vue.createApp({
     // 2. Метод збереження (додавання або редагування)
     async saveNote(noteData) {
       try {
-        await saveNoteToDB(noteData);    // Зберігаємо в IndexedDB
-        await this.refreshNotesFromDB(); // Перемальовуємо список
+        await saveNoteToDB(noteData);      // Зберігаємо в IndexedDB
+        await this.refreshNotesFromDB(); // Перемальовуємо та дублюємо в localStorage
       } catch (error) {
         console.error('Помилка збереження в IndexedDB:', error);
       }
@@ -422,7 +427,7 @@ const app = Vue.createApp({
     async deleteNote(id) {
        try {
          await deleteNoteFromDB(id);
-         await this.refreshNotesFromDB();
+         await this.refreshNotesFromDB(); // Перемальовуємо та дублюємо в localStorage
        } catch (err) {
          console.error('Помилка видалення:', err);
        }
@@ -439,8 +444,8 @@ const app = Vue.createApp({
       const updatedNote = {
         id: note.id,
         title: newTitle.trim() || note.title,
-        category: 'cat-personal',
-        categoryName: 'Особисте',
+        category: note.category || 'cat-personal',
+        categoryName: note.categoryName || 'Особисте',
         excerpt: newContent.trim() || note.excerpt
       };
 

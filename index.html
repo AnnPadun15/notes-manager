@@ -68,6 +68,8 @@
                          :id="note.id"
                          :title="note.title" 
                          :excerpt="note.excerpt"
+                         :category="note.category"
+                         :category-name="note.categoryName"
                          @select="selectNote(note)"
                          @edit="editNote"
                          @remove="deleteNote">
