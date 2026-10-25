@@ -39,6 +39,10 @@
                     <div>
                         <label for="note-content">Текст нотатки:</label>
                         <textarea id="note-content" name="note-content" rows="4" required maxlength="300"></textarea>
+                        <!-- Індикатор прогресу довжини тексту -->
+                        <div class="progress-bar-container">
+                             <div id="char-progress" class="progress-bar-fill"></div>
+                        </div>
                         <small id="char-counter">0 / 300</small>
                     </div>
                     <button type="submit">Зберегти нотатку</button>

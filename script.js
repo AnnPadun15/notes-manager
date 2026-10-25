@@ -225,24 +225,43 @@ if (noteForm) {
     }
 
     noteForm.reset();
+
     if (charCounter) {
       charCounter.textContent = '0 / 300';
+      charCounter.classList.remove('near-limit');
+    }
+
+    if (charProgress) {
+      charProgress.style.width = '0%';
+      charProgress.classList.remove('near-limit');
     }
   });
 }
 
-// Додаткова валідація — живий лічильник символів
+// Динамічний обчислювальний індикатор прогресу на основі даних
+const charProgress = document.querySelector('#char-progress');
+
 if (noteContentInput && charCounter) {
-   noteContentInput.addEventListener('input', function() {
-     const currentLength = noteContentInput.value.length;
-     const maxLength = 300;
+  noteContentInput.addEventListener('input', function() {
+    // Отримуємо реальні дані з об'єкта форми
+    const currentLength = noteContentInput.value.length;
+    const maxLength = parseInt(noteContentInput.getAttribute('maxlength')) || 300;
 
-     // Оновлюємо текст лічильника
-     charCounter.textContent = `${currentLength} / ${maxLength}`;
+    // Розраховуємо відсоток заповнення на основі реальних даних
+    const percentage = Math.min((currentLength / maxLength) * 100, 100);
 
-     // Змінюємо колір/стиль, якщо наближаємося до ліміту (понад 250 символів)
-     charCounter.classList.toggle('near-limit', currentLength >= 250);
-   });
+    // Оновлюємо ширину CSS-індикатора (плавно анімується через transition)
+    if (charProgress) {
+      charProgress.style.width = `${percentage}%`;
+
+      // Динамічна зміна класу при наближенні до ліміту (понад 250 символів)
+      charProgress.classList.toggle('near-limit', currentLength >= 250);
+    }
+
+    // Оновлюємо текстовий лічильник
+    charCounter.textContent = `${currentLength} / ${maxLength}`;
+    charCounter.classList.toggle('near-limit', currentLength >= 250);
+  });
 }
 
 // Перегляд нотатки при кліку (делегування подій)
@@ -353,8 +372,19 @@ const NoteCard = {
     <article 
       :class="['note-card', category || 'cat-personal']" 
       @click="handleCardClick" 
-      style="cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box; min-height: 220px; padding: 14px;">
-      
+      :style="{
+        cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        boxSizing: 'border-box',
+        height: isExpanded ? 'auto' : '230px',
+        maxHeight: isExpanded ? '600px' : '230px',
+        padding: '14px',
+        overflow: 'hidden',
+        transition: 'max-height 0.4s ease-in-out, transform 0.3s ease, box-shadow 0.3s ease'
+      }">
+
       <div style="overflow: hidden;">
         <!-- Динамічний бейдж категорії -->
         <span class="category-badge">{{ categoryName || 'НОТАТКА' }}</span>
