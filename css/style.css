@@ -297,15 +297,27 @@ footer {
   background-color: #f87171;
 }
 
-/* Анімація розгортання, тіні та підйому картки нотатки */
+/* Базовий стан картки (згорнутий) */
 .note-card {
-  transition: max-height 0.4s ease-in-out, transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  height: 230px;            /* Фіксована висота в згорнутому стані */
+  max-height: 230px;        /* Верхня межа для згорнутого стану */
+  overflow: hidden;         /* Приховуємо контент, який не влізає */
+  transition: max-height 0.4s ease-in-out, box-shadow 0.3s ease; /* Плавний перехід */
 }
 
-/* Яскравий ефект при наведенні (картка трохи піднімається і з'являється зеленувата тінь) */
+/* Розгорнутий стан картки при кліку */
+.note-card.expanded {
+  height: auto;             /* Дозволяємо картці розтягуватися під контент */
+  max-height: 1000px;       /* Задаємо завідомо більшу max-height для плавної анімації */
+}
+
+/* Підсвічування картки при наведенні курсору */
 .note-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(16, 185, 129, 0.25) !important;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.45) !important; /* Яскраве синє сяйво */
+  transform: translateY(-3px);                              /* Легке підняття картки */
+}
+
+/* При бажанні — додаткове сяйво при розгортанні */
+.note-card.expanded {
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
 }
