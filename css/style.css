@@ -161,7 +161,6 @@ button:hover {
   background-color: var(--bg-card);
   padding: 1.25rem;
   border-radius: 8px;
-  max-height: 150px;
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   border-left: 4px solid var(--cat-passwords);
@@ -297,27 +296,139 @@ footer {
   background-color: #f87171;
 }
 
-/* Базовий стан картки (згорнутий) */
+
+/* Базовий стан картки */
 .note-card {
-  height: 230px;            /* Фіксована висота в згорнутому стані */
-  max-height: 230px;        /* Верхня межа для згорнутого стану */
-  overflow: hidden;         /* Приховуємо контент, який не влізає */
-  transition: max-height 0.4s ease-in-out, box-shadow 0.3s ease; /* Плавний перехід */
+  height: 230px;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  transition:
+    height 0.5s ease-in-out,
+    box-shadow 0.4s ease,
+    background-color 0.4s ease,
+    transform 0.3s ease;
 }
 
-/* Розгорнутий стан картки при кліку */
+/* Контейнер вмісту */
+.note-card .card-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Заголовок */
+.note-card h3 {
+  margin: 8px 0 10px;
+  color: var(--text-main);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* Область тексту */
+.note-card .excerpt-wrapper {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+
+  /* Приховуємо смугу прокручування */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Chrome, Edge, Safari */
+.note-card .excerpt-wrapper::-webkit-scrollbar {
+  display: none;
+  width: 0;
+}
+
+
+/* Скорочений текст */
+.note-card .short-text {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Повний текст */
+.note-card .full-text {
+  color: var(--text-main);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* Розгорнутий стан */
 .note-card.expanded {
-  height: auto;             /* Дозволяємо картці розтягуватися під контент */
-  max-height: 1000px;       /* Задаємо завідомо більшу max-height для плавної анімації */
+  height: 380px;
+  background-color: #26374d;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
 }
 
-/* Підсвічування картки при наведенні курсору */
+/* Контейнер кнопок */
+.note-card .card-actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* Кнопка редагування */
+.note-card .edit-button {
+  background-color: #10b981 !important;
+  color: #064e3b !important;
+  padding: 5px 10px !important;
+  border-radius: 6px !important;
+  font-size: 0.78rem !important;
+}
+
+/* Кнопка видалення */
+.note-card .delete-button {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  color: #f87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  padding: 5px 10px !important;
+  border-radius: 6px !important;
+  font-size: 0.78rem !important;
+}
+
+/* Ефект наведення */
 .note-card:hover {
-  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.45) !important; /* Яскраве синє сяйво */
-  transform: translateY(-3px);                              /* Легке підняття картки */
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.35);
 }
 
-/* При бажанні — додаткове сяйво при розгортанні */
-.note-card.expanded {
-  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+/* Збереження підсвічування розгорнутої картки */
+.note-card.expanded:hover {
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
+/* Врахування налаштувань зменшення анімації */
+@media (prefers-reduced-motion: reduce) {
+  .note-card {
+    transition: none;
+  }
+}
+
+/* Плавна поява кнопок керування */
+.actions-enter-active,
+.actions-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.actions-enter-from,
+.actions-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.actions-enter-to,
+.actions-leave-from {
+  opacity: 1;
+  transform: translateY(0);
 }

@@ -368,54 +368,64 @@ const NoteCard = {
       });
     }
   },
-  template: `
-    <article 
-      :class="['note-card', category || 'cat-personal']" 
-      @click="handleCardClick" 
-      :style="{
-        cursor: 'pointer',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        boxSizing: 'border-box',
-        height: isExpanded ? 'auto' : '230px',
-        maxHeight: isExpanded ? '600px' : '230px',
-        padding: '14px',
-        overflow: 'hidden',
-        transition: 'max-height 0.4s ease-in-out, transform 0.3s ease, box-shadow 0.3s ease'
-      }">
+  
+template: `
+  <article
+    :class="[
+      'note-card',
+      category || 'cat-personal',
+      { expanded: isExpanded }
+    ]"
+    @click="handleCardClick"
+  >
+    <div class="card-content">
 
-      <div style="overflow: hidden;">
-        <!-- Динамічний бейдж категорії -->
-        <span class="category-badge">{{ categoryName || 'НОТАТКА' }}</span>
-        
-        <h3 style="margin: 8px 0 6px 0; font-size: 1rem; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;" :title="title">
-          {{ title }}
-        </h3>
+      <span class="category-badge">
+        {{ categoryName || 'НОТАТКА' }}
+      </span>
 
-        <p v-if="!isExpanded" style="color: #9ca3af; font-size: 0.85rem; line-height: 1.35; margin: 0;">
-          {{ excerpt.length > 35 ? excerpt.substring(0, 35) + '...' : excerpt }}
+      <h3 :title="title">
+        {{ title }}
+      </h3>
+
+      <div class="excerpt-wrapper">
+
+        <p v-if="!isExpanded" class="short-text">
+          {{ excerpt.length > 35
+            ? excerpt.substring(0, 35) + '...'
+            : excerpt }}
         </p>
-        <p v-else style="color: #ffffff; font-size: 0.88rem; line-height: 1.4; margin: 0; word-break: break-word;">
+
+        <p v-else class="full-text">
           {{ excerpt }}
         </p>
+
       </div>
 
-      <div style="margin-top: 10px; display: flex; gap: 8px; align-items: center;">
-        <button 
-          @click="editCard" 
-          style="background-color: #10b981 !important; color: #064e3b !important; border: none !important; padding: 5px 10px !important; border-radius: 6px !important; cursor: pointer !important; font-weight: 700 !important; font-size: 0.78rem !important;">
-          Редагувати
-        </button>
+      <Transition name="actions">
+        <div v-if="isExpanded" class="card-actions">
 
-        <button 
-          @click="deleteCard" 
-          style="background-color: rgba(239, 68, 68, 0.15) !important; color: #f87171 !important; border: 1px solid rgba(239, 68, 68, 0.3) !important; padding: 5px 10px !important; border-radius: 6px !important; cursor: pointer !important; font-weight: 600 !important; font-size: 0.78rem !important;">
-          Видалити
-        </button>
-      </div>
-    </article>
-  `
+          <button
+            class="edit-button"
+            @click.stop="editCard"
+          >
+            Редагувати
+          </button>
+
+          <button
+            class="delete-button"
+            @click.stop="deleteCard"
+          >
+            Видалити
+          </button>
+
+        </div>
+      </Transition>
+
+    </div>
+  </article>
+`
+
 };
 // Оновлений об'єкт Vue
 const app = Vue.createApp({
