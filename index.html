@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Менеджер нотаток</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="script.js" defer></script>
-    <!-- Vue 3, глобальна збірка -->
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="js/storage.js" defer></script>
+    <script src="js/app.js" defer></script>
 </head>
 <body>
 
@@ -15,77 +14,93 @@
         <h1>Менеджер нотаток</h1>
     </header>
 
-    <div class="app-container">
-        <main>
-             <section id="new-note">
-                <h2>Нова нотатка</h2>
-                <form id="note-form" action="#">
-                    <div>
-                        <label for="note-title">Заголовок нотатки:</label>
-                        <input type="text" id="note-title" name="note-title" required>
-                    </div>
-                    <div>
-                        <label for="note-category">Категорія:</label>
-                        <select id="note-category" name="note-category" required>
-                            <option value="cat-personal">Особисте</option>
-                            <option value="cat-important">Важливе</option>
-                            <option value="cat-password">Пароль / Доступ</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="note-password">Пароль (якщо потрібен):</label>
-                        <input type="password" id="note-password" name="note-password" placeholder="Введіть пароль" autocomplete="off">
-                    </div>
-                    <div>
-                        <label for="note-content">Текст нотатки:</label>
-                        <textarea id="note-content" name="note-content" rows="4" required maxlength="300"></textarea>
-                        <!-- Індикатор прогресу довжини тексту -->
-                        <div class="progress-bar-container">
-                             <div id="char-progress" class="progress-bar-fill"></div>
-                        </div>
-                        <small id="char-counter">0 / 300</small>
-                    </div>
-                    <button type="submit">Зберегти нотатку</button>
-                </form>
-            </section>
+    <nav class="app-nav" aria-label="Головна навігація">
+    <a href="#/" data-link>Усі нотатки</a>
+    <a href="#/new" data-link>Нова нотатка</a>
+    </nav>
 
-            <section id="app">
+    <div class="app-container" id="app"></div>
+
+    <template id="notes-template">
+         <main>
+             <section id="notes-section">
                  <h2>Мої нотатки</h2>
-                 <!-- Індикатор завантаження через стан Vue -->
-                 <p v-if="isLoading" style="color: #10b981; font-weight: bold;">Завантаження нотаток...</p>
-    
-                 <!-- Кнопка оновлення з директивою @click -->
-                 <button id="refresh-btn" class="btn-primary" @click="loadNotes" style="margin-bottom: 1rem;">
-                     Оновити нотатки
-                 </button>
-    
-                 <!-- Блок помилки через стан Vue -->
-                 <div v-if="errorMessage" style="color: #f87171; font-weight: bold; padding: 10px; border: 1px solid #f87171; border-radius: 6px; margin-bottom: 1rem;">
-                     {{ errorMessage }}
-                 </div>
-                 <p id="notes-count">Усього нотаток: {{ notes.length }}</p>
+                 <p id="notes-status" role="status"></p>
 
-                 <div id="notes-list" class="cards">
-                    <note-card 
-                         v-for="note in notes" 
-                         :key="note.id" 
-                         :id="note.id"
-                         :title="note.title" 
-                         :excerpt="note.excerpt"
-                         :category="note.category"
-                         :category-name="note.categoryName"
-                         @select="selectNote(note)"
-                         @edit="editNote"
-                         @remove="deleteNote">
-                     </note-card>
-                </div>
+                 <button id="refresh-btn" class="btn-primary" type="button">
+                   Оновити нотатки
+                  </button>
+
+                 <p id="notes-count">Усього нотаток: 0</p>
+                 <div id="notes-list" class="cards"></div>
              </section>
          </main>
+
          <aside id="note-details">
              <h2>Перегляд нотатки</h2>
              <p>Оберіть нотатку зі списку для перегляду</p>
          </aside>
-    </div>
+     </template>
+
+  
+     <template id="new-note-template">
+         <main>
+             <section id="new-note">
+                 <h2>Нова нотатка</h2>
+
+                 <form id="note-form" action="#">
+                     <div>
+                         <label for="note-title">Заголовок нотатки:</label>
+                         <input type="text" id="note-title" name="note-title" required>
+                     </div>
+
+                     <div>
+                         <label for="note-category">Категорія:</label>
+                         <select id="note-category" name="note-category" required>
+                           <option value="cat-personal">Особисте</option>
+                           <option value="cat-important">Важливе</option>
+                           <option value="cat-password">Пароль / Доступ</option>
+                         </select>
+                     </div>
+
+                     <div>
+                         <label for="note-password">Пароль (якщо потрібен):</label>
+                         <input
+                           type="password"
+                           id="note-password"
+                           name="note-password"
+                           placeholder="Введіть пароль"
+                           autocomplete="off"
+                         >
+                     </div>
+
+                     <div>
+                         <label for="note-content">Текст нотатки:</label>
+                         <textarea
+                           id="note-content"
+                           name="note-content"
+                           rows="4"
+                           required
+                           maxlength="300"
+                         ></textarea>
+
+                         <div class="progress-bar-container">
+                             <div id="char-progress" class="progress-bar-fill"></div>
+                         </div>
+                         <small id="char-counter">0 / 300</small>
+                     </div>
+
+                     <button type="submit">Зберегти нотатку</button>
+                 </form>
+             </section>
+         </main>
+
+         <aside id="note-details">
+             <h2>Менеджер нотаток</h2>
+             <p>Заповніть форму, щоб створити нотатку.</p>
+         </aside>
+     </template>
+
 
     <footer>
         <p>&copy; 2026 Менеджер нотаток. Автор: <strong>Анна Падун</strong>. Розроблено для практичної роботи.</p>

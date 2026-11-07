@@ -432,3 +432,87 @@ footer {
   opacity: 1;
   transform: translateY(0);
 }
+
+
+.card-actions[hidden],
+.full-text[hidden] {
+  display: none !important;
+}
+
+.note-card {
+  cursor: pointer;
+}
+
+.note-card.selected {
+  outline: 2px solid var(--accent-shield);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.16);
+}
+
+.note-card .card-actions:not([hidden]) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+aside#note-details {
+  position: sticky;
+  top: 1rem;
+  line-height: 1.6;
+}
+
+aside#note-details h3 {
+  overflow-wrap: anywhere;
+}
+
+aside#note-details .detail-content {
+  color: var(--text-main);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.app-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.app-nav a {
+  display: inline-block;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-card);
+}
+
+.app-nav a:hover {
+  border-color: var(--accent-shield);
+  text-decoration: none;
+}
+
+#note-details label,
+#note-details input,
+#note-details select,
+#note-details textarea {
+  display: block;
+  width: 100%;
+}
+
+#note-details label {
+  margin: 0.75rem 0 0.35rem;
+  font-weight: bold;
+}
+
+#note-details input,
+#note-details select,
+#note-details textarea {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-input);
+  color: var(--text-main);
+  font: inherit;
+}
