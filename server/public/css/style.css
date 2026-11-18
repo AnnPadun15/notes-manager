@@ -1,0 +1,518 @@
+/* ==========================================================================
+   ОБҐРУНТУВАННЯ ДИЗАЙН-РІШЕННЯ (Варіант 13 - Менеджер нотаток та паролів)
+   --------------------------------------------------------------------------
+   1. Нечітка вимога «Надійно й безпечно»:
+      - Палітра: Використано глибоку темну гаму (#0f172a / #1e293b), яка
+        асоціюється з захищеними терміналами та кібербезпекою.
+      - Акцент: Акцентний смарагдово-зелений колір (#10b981) візуально
+        сигналізує про безпеку, стабільність та захищеність даних.
+   2. Чітка вимога (Моноширинний шрифт):
+      - Для полів вводу паролів застосовано Consolas/Monospace, що забезпечує
+        чітке розрізнення схожих символів (наприклад, '1', 'l', 'I', '0', 'O').
+   3. Доступність (WCAG AA):
+      - Контрастність основного тексту до фону становить 12.5:1 (норма >= 4.5:1).
+   ========================================================================== */
+:root {
+  /* Базова темна палітра */
+  --bg-main: #0f172a;
+  --bg-card: #1e293b;
+  --bg-input: #334155;
+  --border-color: #475569;
+  
+  /* Текст (WCAG AA ≥ 4.5:1) */
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  
+  /* Акцент безпеки */
+  --accent-shield: #10b981;
+  --accent-hover: #059669;
+  
+  /* Кольори категорій */
+  --cat-passwords: #10b981;
+  --cat-personal: #3b82f6;
+  --cat-important: #43ed90;
+
+  /* Типографіка */
+  --font-main: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Consolas', 'Courier New', monospace; /* Моноширинний для паролів */
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-main);
+  font-size: 1rem;
+  line-height: 1.5;
+  background-color: var(--bg-main); 
+  color: var(--text-main);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.site-header {
+  background-color: var(--bg-card);
+  padding: 1.5rem 2rem;
+  border-bottom: 2px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.site-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  color: var(--text-main);
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+main {
+  width: 100%;
+}
+
+a {
+  color: var(--accent-shield);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#new-note {
+  margin-bottom: 2rem;
+}
+
+#new-note div {
+  margin-bottom: 1rem;
+}
+
+#new-note label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+}
+
+#new-note input[type="text"],
+#new-note input[type="password"],
+#new-note select,
+#new-note textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--bg-input); 
+  color: var(--text-main);
+  font-size: 1rem;
+  font-family: var(--font-main);
+}
+
+/* ЧІТКА ВИМОГА: Моноширинний шрифт для полів вводу паролів / коду */
+#new-note input[type="password"],
+.password-field,
+.mono-text {
+  font-family: var(--font-mono) !important;
+  letter-spacing: 0.05em;
+}
+
+#new-note input[type="text"]:focus,
+#new-note input[type="password"]:focus,
+#new-note select:focus,
+#new-note textarea:focus {
+  outline: 2px solid var(--accent-shield);
+  border-color: var(--accent-shield);
+}
+
+#new-note button,
+button {
+  background-color: var(--accent-shield) !important;
+  color: #0f172a !important;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+#new-note button:hover,
+button:hover {
+  background-color: var(--accent-hover) !important;
+}
+
+.cards article {
+  background-color: var(--bg-card);
+  padding: 1.25rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-left: 4px solid var(--cat-passwords);
+}
+
+.cards article.cat-personal {
+  border-left-color: var(--cat-personal);
+}
+
+.cards article.cat-important {
+  border-left-color: var(--cat-important);
+}
+
+.cards article.cat-password {
+  border-left-color: var(--cat-passwords);
+}
+
+.category-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.cat-important .category-badge {
+  background-color: rgba(45, 249, 123, 0.2);
+  color: var(--cat-important);
+}
+
+.cat-personal .category-badge {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: var(--cat-personal);
+}
+
+.cat-password .category-badge {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: var(--cat-passwords);
+}
+
+#notes-list article h3 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: var(--text-main);
+}
+
+#notes-list article p {
+  margin-bottom: 0.75rem;
+  color: var(--text-muted);
+}
+
+aside#note-details {
+  background-color: var(--bg-card);
+  padding: 20px;
+  margin-top: 2rem;
+  width: 100%;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+aside#note-details h2 {
+  margin-top: 0;
+  color: var(--accent-shield);
+}
+
+footer {
+  text-align: center;
+  padding: 1.5rem 1rem;
+  background-color: #0b1120;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  border-top: 1px solid var(--border-color);
+}
+
+#char-counter {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  display: block;
+  text-align: right;
+  margin-top: 0.25rem;
+}
+
+#char-counter.near-limit {
+  color: #f87171; 
+  font-weight: bold;
+}
+
+@media (min-width: 600px) {
+  .cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .app-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  .cards {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  aside#note-details {
+    margin-top: 0;
+  }
+}
+
+/* Стилі контейнера та лінійно анімованого прогрес-бару */
+.progress-bar-container {
+  width: 100%;
+  height: 6px;
+  background-color: var(--bg-input);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  width: 0%;
+  background-color: var(--accent-shield);
+  /* Плавний transition для зміни ширини та кольору */
+  transition: width 0.25s ease-out, background-color 0.3s ease;
+}
+
+/* Колір при наближенні до ліміту символів */
+.progress-bar-fill.near-limit {
+  background-color: #f87171;
+}
+
+
+/* Базовий стан картки */
+.note-card {
+  height: 230px;
+  box-sizing: border-box;
+  overflow: hidden;
+
+  transition:
+    height 0.5s ease-in-out,
+    box-shadow 0.4s ease,
+    background-color 0.4s ease,
+    transform 0.3s ease;
+}
+
+/* Контейнер вмісту */
+.note-card .card-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Заголовок */
+.note-card h3 {
+  margin: 8px 0 10px;
+  color: var(--text-main);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* Область тексту */
+.note-card .excerpt-wrapper {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+
+  /* Приховуємо смугу прокручування */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Chrome, Edge, Safari */
+.note-card .excerpt-wrapper::-webkit-scrollbar {
+  display: none;
+  width: 0;
+}
+
+
+/* Скорочений текст */
+.note-card .short-text {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Повний текст */
+.note-card .full-text {
+  color: var(--text-main);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+
+/* Розгорнутий стан */
+.note-card.expanded {
+  height: 380px;
+  background-color: #26374d;
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+}
+
+/* Контейнер кнопок */
+.note-card .card-actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+/* Кнопка редагування */
+.note-card .edit-button {
+  background-color: #10b981 !important;
+  color: #064e3b !important;
+  padding: 5px 10px !important;
+  border-radius: 6px !important;
+  font-size: 0.78rem !important;
+}
+
+/* Кнопка видалення */
+.note-card .delete-button {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  color: #f87171 !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  padding: 5px 10px !important;
+  border-radius: 6px !important;
+  font-size: 0.78rem !important;
+}
+
+/* Ефект наведення */
+.note-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.35);
+}
+
+/* Збереження підсвічування розгорнутої картки */
+.note-card.expanded:hover {
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
+/* Врахування налаштувань зменшення анімації */
+@media (prefers-reduced-motion: reduce) {
+  .note-card {
+    transition: none;
+  }
+}
+
+/* Плавна поява кнопок керування */
+.actions-enter-active,
+.actions-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.actions-enter-from,
+.actions-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.actions-enter-to,
+.actions-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+.card-actions[hidden],
+.full-text[hidden] {
+  display: none !important;
+}
+
+.note-card {
+  cursor: pointer;
+}
+
+.note-card.selected {
+  outline: 2px solid var(--accent-shield);
+  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.16);
+}
+
+.note-card .card-actions:not([hidden]) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+aside#note-details {
+  position: sticky;
+  top: 1rem;
+  line-height: 1.6;
+}
+
+aside#note-details h3 {
+  overflow-wrap: anywhere;
+}
+
+aside#note-details .detail-content {
+  color: var(--text-main);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.app-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.app-nav a {
+  display: inline-block;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-card);
+}
+
+.app-nav a:hover {
+  border-color: var(--accent-shield);
+  text-decoration: none;
+}
+
+#note-details label,
+#note-details input,
+#note-details select,
+#note-details textarea {
+  display: block;
+  width: 100%;
+}
+
+#note-details label {
+  margin: 0.75rem 0 0.35rem;
+  font-weight: bold;
+}
+
+#note-details input,
+#note-details select,
+#note-details textarea {
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--bg-input);
+  color: var(--text-main);
+  font: inherit;
+}

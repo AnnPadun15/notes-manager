@@ -6,7 +6,7 @@ const categoryNames = {
   'cat-password': 'Пароль / Доступ'
 };
 
-const API_URL = 'https://jsonplaceholder.typicode.com/posts?userId=1';
+const API_URL = '/api/notes';
 
 function showTemplate(templateId) {
   const template = document.querySelector(`#${templateId}`);
@@ -344,9 +344,9 @@ async function loadNotesFromAPI() {
     await saveNoteToDB({
       id: String(post.id),
       title: post.title,
-      category: 'cat-personal',
-      categoryName: 'Особисте',
-      excerpt: post.body,
+      category: post.category,
+      categoryName: post.categoryName,
+      excerpt: post.text,
       password: ''
     });
   }

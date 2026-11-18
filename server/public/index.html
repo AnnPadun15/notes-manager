@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Менеджер нотаток</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/storage.js" defer></script>
+    <script src="js/app.js" defer></script>
+</head>
+<body>
+
+    <header class="site-header">
+        <h1>Менеджер нотаток</h1>
+    </header>
+
+    <nav class="app-nav" aria-label="Головна навігація">
+    <a href="#/" data-link>Усі нотатки</a>
+    <a href="#/new" data-link>Нова нотатка</a>
+    </nav>
+
+    <div class="app-container" id="app"></div>
+
+    <template id="notes-template">
+         <main>
+             <section id="notes-section">
+                 <h2>Мої нотатки</h2>
+                 <p id="notes-status" role="status"></p>
+
+                 <button id="refresh-btn" class="btn-primary" type="button">
+                   Оновити нотатки
+                  </button>
+
+                 <p id="notes-count">Усього нотаток: 0</p>
+                 <div id="notes-list" class="cards"></div>
+             </section>
+         </main>
+
+         <aside id="note-details">
+             <h2>Перегляд нотатки</h2>
+             <p>Оберіть нотатку зі списку для перегляду</p>
+         </aside>
+     </template>
+
+  
+     <template id="new-note-template">
+         <main>
+             <section id="new-note">
+                 <h2>Нова нотатка</h2>
+
+                 <form id="note-form" action="#">
+                     <div>
+                         <label for="note-title">Заголовок нотатки:</label>
+                         <input type="text" id="note-title" name="note-title" required>
+                     </div>
+
+                     <div>
+                         <label for="note-category">Категорія:</label>
+                         <select id="note-category" name="note-category" required>
+                           <option value="cat-personal">Особисте</option>
+                           <option value="cat-important">Важливе</option>
+                           <option value="cat-password">Пароль / Доступ</option>
+                         </select>
+                     </div>
+
+                     <div>
+                         <label for="note-password">Пароль (якщо потрібен):</label>
+                         <input
+                           type="password"
+                           id="note-password"
+                           name="note-password"
+                           placeholder="Введіть пароль"
+                           autocomplete="off"
+                         >
+                     </div>
+
+                     <div>
+                         <label for="note-content">Текст нотатки:</label>
+                         <textarea
+                           id="note-content"
+                           name="note-content"
+                           rows="4"
+                           required
+                           maxlength="300"
+                         ></textarea>
+
+                         <div class="progress-bar-container">
+                             <div id="char-progress" class="progress-bar-fill"></div>
+                         </div>
+                         <small id="char-counter">0 / 300</small>
+                     </div>
+
+                     <button type="submit">Зберегти нотатку</button>
+                 </form>
+             </section>
+         </main>
+
+         <aside id="note-details">
+             <h2>Менеджер нотаток</h2>
+             <p>Заповніть форму, щоб створити нотатку.</p>
+         </aside>
+     </template>
+
+
+    <footer>
+        <p>&copy; 2026 Менеджер нотаток. Автор: <strong>Анна Падун</strong>. Розроблено для практичної роботи.</p>
+    </footer>
+
+</body>
+</html>
